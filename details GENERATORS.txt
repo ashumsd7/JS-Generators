@@ -1,0 +1,114 @@
+#Generators
+
+---
+As regular functions returns only one value (single value) or nothing. But Generators  can return multiple values one after another , on demand.
+Special syntax is used : function*
+```
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+}
+```
+These functions are totally different from regular functions.
+When we call generators code will not run which is written inside the generators.
+Instead of this it will return a special object. which is called generator object.
+```
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+}
+let gene= generateSequence();
+console.log(gene);       // Object [Generator] {}
+```
+Means : code written inside the generator block has not started yet.
+The main method of generators is next():
+
+when next() is called on generators , it runs the the execution until the nearest yield<value> statement (value can be omitted, then it's undefined.  Then the function execution pauses, and the yield value is returned to the outer code.
+The result of next()  is always an object with 2 properties.
+```
+value: the yielded value
+done: true    : if the function code has finished, other wise false
+```
+Example:
+```
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+}
+let gene= generateSequence();
+let value= gene.next();
+console.log(value);    //{ value: 1, done: false }
+value= gene.next();
+console.log(value);    //{ value: 2, done: false }
+value= gene.next();
+console.log(value);    //{ value: 3, done: true }
+```
+
+NOTE:
+```
+function* f(…) or function *f(…)?
+                                  //Both syntaxes are correct.
+```
+Example: How to iterate over generator.
+```
+function* generatorFunction(){
+yield "ashu";
+yield "aasim";
+yield "mohan";
+return "success";
+}
+let mygenFun= generatorFunction();
+
+let receivedValue= [0,...mygenFun]
+console.log(receivedValue);    // [0, "ashu", "aasim", "mohan"]
+```
+Example:   using for ... of loop
+```
+function* generatorFunction(){
+yield "ashu";
+yield "aasim";
+yield "mohan";
+return "success";
+}
+let mygenFun= generatorFunction();
+for(let value of mygenFun)
+{
+    
+    console.log(value);    //ashu  aasim  mohan
+}    
+```
+
+Generators composition: is a special feature of generators that allows to transparently "embed" generators in each other.
+Function calling another function inside a function:
+Generators calling another generator inside generator.
+
+Bring  some more logic and this code can be your password generator, Try it.
+```
+function* generateSequence(start,end){
+    for(let i=start;i<=end;i++)
+    {
+        yield i;
+    }
+}
+function* generatePasswordCodes(){
+    yield* generateSequence(48,57);
+    yield* generateSequence(65,90);
+    yield* generateSequence(97,122);
+}
+let str= '';
+for(let code of generatePasswordCodes()){
+    str= str+String.fromCharCode(code);
+}
+console.log(str);                             //0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+```
+"yield" is a two way street why?
+Generators are something like iteratable objects, with a special syntax to generate values. But they are more powerful and flexible.
+That's because  yield  is a two way street, it not only returns the result to the outside , but can also pass the value inside the generators.
+
+Not completed yet: 
+generator.throw
+
+NOTE: In modern JavaScript, generators are rarely used. But sometimes they come in handy, because the ability of a function to exchange data with the calling code during the execution is quite unique. And, surely, they are great for making iterable objects.
